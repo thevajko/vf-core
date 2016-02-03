@@ -1,0 +1,21 @@
+{
+  "name": "thevajko/vf-core",
+  "description": "Nette Utility Classes",
+  "homepage": "http://vajko.kst.fri.uniza.sk",
+  "license": ["CC-BY-NC-SA 4.0"],
+  "authors": [
+    {
+      "name": "Matej Meško",
+      "role": "Developer",
+      "email": "meshosk@gmail.com"
+    },
+    {
+      "name": "Vajko framework basecamp",
+      "email": "mesko@kst.uniza.sk",
+      "homepage": "http://vajko.kst.fri.uniza.sk"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0"
+  }
+}
