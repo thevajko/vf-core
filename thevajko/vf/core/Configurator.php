@@ -2,7 +2,7 @@
 
 namespace thevajko\vf\core;
 
-use vajko\vf\core\interfaces\IContainerItem;
+use thevajko\vf\core\interfaces\IContainerItem;
 
 /**
  * Class for loading configuration file and access to this settings
@@ -19,7 +19,7 @@ use vajko\vf\core\interfaces\IContainerItem;
  * @author Matej Meško <meshosk@gmail.com>
  * @license http://creativecommons.org/licenses/by-nc-sa/4.0/GNU CC BY-NC-SA 4.0
  *
- * @package vajko\core
+ * @package thevajko\vf\core
  *
  */
 class Configurator implements IContainerItem

@@ -1,6 +1,6 @@
 <?php
 
-namespace thevajko\core\abstracts;
+namespace thevajko\vf\core\abstracts;
 
 use thevajko\vf\core\Container;
 use thevajko\vf\core\interfaces\IRender;

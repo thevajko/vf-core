@@ -3,9 +3,9 @@
 namespace thevajko\vf\core;
 
 use stdClass;
-use vajko\core\interfaces\IContainerItem;
-use vajko\core\interfaces\IRender;
-use vajko\core\interfaces\IRouter;
+use thevajko\vf\core\interfaces\IContainerItem;
+use thevajko\vf\core\interfaces\IRender;
+use thevajko\vf\core\interfaces\IRouter;
 
 /**
  * Class Render for templates rendering - view component of Vajko framework
@@ -21,7 +21,7 @@ use vajko\core\interfaces\IRouter;
  * @author Matej Meško <meshosk@gmail.com>
  * @license http://creativecommons.org/licenses/by-nc-sa/4.0/GNU CC BY-NC-SA 4.0
  *
- * @package vajko\core
+ * @package thevajko\vf\core
  *
  */
 class Render implements IContainerItem, IRender

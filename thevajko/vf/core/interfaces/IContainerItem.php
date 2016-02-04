@@ -14,7 +14,7 @@ use thevajko\vf\core\Container;
  *
  * @author Matej Meško <meshosk@gmail.com>
  * @license http://creativecommons.org/licenses/by-nc-sa/4.0/GNU CC BY-NC-SA 4.0
- * @package vajko\core\interfaces
+ * @package thevajko\vf\core\interfaces
  */
 interface IContainerItem
 {

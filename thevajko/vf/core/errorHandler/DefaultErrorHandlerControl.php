@@ -16,7 +16,7 @@ use thevajko\vf\core\interfaces\IRender;
  * @author Matej Meško <meshosk@gmail.com>
  * @license http://creativecommons.org/licenses/by-nc-sa/4.0/GNU CC BY-NC-SA 4.0
  *
- * @package vajko\core\errorHandler
+ * @package thevajko\vf\core\errorHandler
  *
  */
 class DefaultErrorHandlerControl implements IErrorHandler

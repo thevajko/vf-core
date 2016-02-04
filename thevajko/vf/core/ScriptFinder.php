@@ -6,7 +6,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
 use RegexIterator;
-use vajko\core\interfaces\IContainerItem;
+use thevajko\vf\core\interfaces\IContainerItem;
 
 /**
  * Simple class for regex search in scripts in directory. Directory is searched recursively.
@@ -19,7 +19,7 @@ use vajko\core\interfaces\IContainerItem;
  * @author Matej Meško <meshosk@gmail.com>
  * @license http://creativecommons.org/licenses/by-nc-sa/4.0/GNU CC BY-NC-SA 4.0
  *
- * @package vajko\core
+ * @package thevajko\vf\core
  *
  */
 class ScriptFinder implements IContainerItem
@@ -50,7 +50,7 @@ class ScriptFinder implements IContainerItem
 
 
     /**
-     * Search in direcotry recursively for php files
+     * Search in directory recursively for php files
      *
      * @param strin $scriptDir full directory path
      */
