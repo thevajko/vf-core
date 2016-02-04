@@ -33,7 +33,12 @@ class Booter
     /**
      * @var string Root dir of scipts namespaces
      */
-    public $scriptDir = "";
+    public $scriptDirs = "";
+
+    /**
+     * @var string
+     */
+    public $appRootDir = "";
 
     /**
      * @var Container Object containing all application objects
@@ -55,25 +60,27 @@ class Booter
      */
     public $debugMode = false;
 
-    public function __construct()
+    public function __construct(array $autoloadDirs = null)
     {
-        //get actual direcotry of this script
-        $dirFragments = explode(DIRECTORY_SEPARATOR, __DIR__);
 
-        //remove last two direcotry from array
-        array_pop($dirFragments);
-        array_pop($dirFragments);
 
-        //put all remaining dir
-        $this->scriptDir = implode(DIRECTORY_SEPARATOR, $dirFragments).DIRECTORY_SEPARATOR;
+        // this is not clean, but this files are needed for script loading
+        require_once  __DIR__."/interfaces/IContainerItem.php";
+        require_once  __DIR__."/ScriptFinder.php";
 
+        // put all remaining dir
+        $this->scriptDirs = $autoloadDirs;
+        $this->appRootDir = __DIR__."";
+
+        // Create object for script finding
+        $this->scriptFinder = new ScriptFinder($this->scriptDirs);
     }
 
     /**
      * Method which register function for PHP spl autoloading register. This will load script if it is needed - on demand - lazy loading
      */
     public function initScriptLazyAutoloading(){
-        //register callback method for on demand class loading
+        // register callback method for on demand class loading
         spl_autoload_register(array($this, 'lazyLoadScript'));
     }
 
@@ -84,12 +91,13 @@ class Booter
      * @internal param $classFullName
      */
     public function lazyLoadScript($className){
-        $script = $this->scriptDir . str_replace("\\", DIRECTORY_SEPARATOR, $className) . ".php";
+
+        $script = $this->getProbableFullPath($className);
         if (file_exists($script)){
-            include_once $script;
+            require_once $script;
         } else {
             $message = "Following script was not found: '" . $script. "' when app was searching for class with name '" . $className."'.".
-                " Please check namespace, possition of script in directories and class name.";
+                " Please check namespace, position of script in directories and class name.";
             throw new \Exception( $message, 500);
         }
     }
@@ -111,6 +119,21 @@ class Booter
      */
     public function getProbableFullClassName($namespacePart){
 
+
+        $fullPathToScript = $this->getProbableFullPath($namespacePart);
+
+        // remove actual path prefix
+        $namespace = str_replace($this->scriptDirs,"",$fullPathToScript);
+        // remove filename
+        $filename = basename($namespace);
+        $namespace = str_replace($filename,"",$namespace);
+        $filenameParts = explode(".",$filename);
+
+        // change directory separator to php namespace separator
+        return str_replace(DIRECTORY_SEPARATOR, "\\", $namespace).reset($filenameParts);
+    }
+
+    public function getProbableFullPath($namespacePart){
         //correct backslashes in namespace to dir ones
         $namespacePart = str_replace("\\", DIRECTORY_SEPARATOR, $namespacePart);
         //correct backslashes in namespace that are no longer escape characters
@@ -128,22 +151,10 @@ class Booter
         foreach ($possibleScripts as $possibleScript) {
             $pathParts = explode(DIRECTORY_SEPARATOR, $possibleScript);
             if (substr_count(end($pathParts),".") == 1) {
-                $fullPathToScript = $possibleScript;
-                break;
+                return $possibleScript;
             }
         }
-
-        // remove actual path prefix
-        $namespace = str_replace($this->scriptDir,"",$fullPathToScript);
-        // remove filename
-        $filename = basename($namespace);
-        $namespace = str_replace($filename,"",$namespace);
-        $filenameParts = explode(".",$filename);
-
-        // change directory separator to php namespace separator
-        return str_replace(DIRECTORY_SEPARATOR, "\\", $namespace).reset($filenameParts);
     }
-
 
 
 
@@ -198,17 +209,15 @@ class Booter
 
         // !!!! - Below is initialization of core element that cannot be changed
 
-            // Create object for script finding
-            $this->scriptFinder = new ScriptFinder($this->scriptDir);
-
             //application init
             //first step - init container
             $this->container = new Container();
 
-            //add script finder
+            //add script finder for templates
             $this->container->add($this->scriptFinder, EnumCoreElements::scriptFinder);
+
             //create configurator
-            $this->configurator = new Configurator($this->scriptDir."config.json"); //loading config file is needed to be here
+            $this->configurator = new Configurator($this->scriptFinder->findScript("/config.json/")); //loading config file is needed to be here
             $this->container->add($this->configurator, EnumCoreElements::config);
 
         // !!!! - End of initialization of core element that cannot be changed

@@ -28,11 +28,15 @@ class ScriptFinder implements IContainerItem
     /**
      * @var array List of all php scripts in scripts dir
      */
-    private $scriptArray = array();
+    protected $scriptArray = array();
 
-    public function __construct($dirToMap)
+    public function __construct($dirsToMap)
     {
-        $this->mapScripts($dirToMap);
+        if (empty($dirsToMap)) return;
+
+        foreach ($dirsToMap as $dirToMap) {
+            $this->mapScripts($dirToMap);
+        }
     }
 
     /**
@@ -48,11 +52,10 @@ class ScriptFinder implements IContainerItem
         return $foundScripts;
     }
 
-
     /**
      * Search in directory recursively for php files
      *
-     * @param strin $scriptDir full directory path
+     * @param string $scriptDir full directory path
      */
     private function mapScripts($scriptDir){
         $directory = new RecursiveDirectoryIterator($scriptDir);
@@ -72,6 +75,6 @@ class ScriptFinder implements IContainerItem
      */
     public function containerInitialization(Container $container)
     {
-        // do nohing
+        // do nothing
     }
 }
