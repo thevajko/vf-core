@@ -1,6 +1,6 @@
 <?php
 
-namespace thevajko\core\errorHandler;
+namespace thevajko\vf\core\errorHandler;
 
 use thevajko\vf\core\interfaces\IErrorHandler;
 use thevajko\vf\core\interfaces\IRender;

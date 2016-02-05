@@ -30,12 +30,12 @@ class ScriptFinder implements IContainerItem
      */
     protected $scriptArray = array();
 
-    public function __construct($dirsToMap)
+    public function __construct($dirsToMap, $fileFilter)
     {
         if (empty($dirsToMap)) return;
 
         foreach ($dirsToMap as $dirToMap) {
-            $this->mapScripts($dirToMap);
+            $this->mapScripts($dirToMap, $fileFilter);
         }
     }
 
@@ -56,11 +56,12 @@ class ScriptFinder implements IContainerItem
      * Search in directory recursively for php files
      *
      * @param string $scriptDir full directory path
+     * @param string $mapFilter filter used for pick up files to map
      */
-    private function mapScripts($scriptDir){
+    private function mapScripts($scriptDir, $mapFilter = '/^.+\.php$/i'){
         $directory = new RecursiveDirectoryIterator($scriptDir);
         $iterator = new RecursiveIteratorIterator($directory);
-        $regex = new RegexIterator($iterator, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
+        $regex = new RegexIterator($iterator, $mapFilter, RecursiveRegexIterator::GET_MATCH);
 
         foreach ($regex as $scriptPath){
             $this->scriptArray[] = $scriptPath[0];

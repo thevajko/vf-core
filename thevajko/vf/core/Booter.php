@@ -70,10 +70,10 @@ class Booter
 
         // put all remaining dir
         $this->scriptDirs = $autoloadDirs;
-        $this->appRootDir = __DIR__."";
+        $this->appRootDir = explode("/vendor/",__DIR__)[0];
 
         // Create object for script finding
-        $this->scriptFinder = new ScriptFinder($this->scriptDirs);
+        $this->scriptFinder = new ScriptFinder($this->scriptDirs,'/^.*\.(php|json)$/i');
     }
 
     /**
@@ -122,8 +122,10 @@ class Booter
 
         $fullPathToScript = $this->getProbableFullPath($namespacePart);
 
-        // remove actual path prefix
-        $namespace = str_replace($this->scriptDirs,"",$fullPathToScript);
+        // remove mapped dirs prefix
+
+        $namespace = explode("/../",$fullPathToScript)[1];
+
         // remove filename
         $filename = basename($namespace);
         $namespace = str_replace($filename,"",$namespace);

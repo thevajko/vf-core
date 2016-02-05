@@ -37,13 +37,16 @@ class Configurator implements IContainerItem
      */
     public function __construct($jsonFilePath)
     {
+        if (is_array($jsonFilePath))
+            $jsonFilePath = reset($jsonFilePath);
+
         //check if file exists
         if (!file_exists($jsonFilePath)){
             throw new \Exception("Configuration file '$jsonFilePath' not found.",500);
         }
         //load text file
         $jsonData = file_get_contents($jsonFilePath);
-        //remove coments
+        //remove comments
         $jsonData = preg_replace('/\/\/(.*)/',"",$jsonData);
         //deserialize data into object
         $this->data = json_decode($jsonData);
