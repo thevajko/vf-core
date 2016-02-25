@@ -50,6 +50,11 @@ class Render implements IContainerItem, IRender
     /** @var ScriptFinder $scriptFinder */
     public $scriptFinder;
 
+    /**
+     * @var string If is not empty, it overrides default template file
+     */
+    public $templateFile;
+
 
     public function __construct()
     {

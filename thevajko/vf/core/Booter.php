@@ -141,6 +141,7 @@ class Booter
         //correct backslashes in namespace that are no longer escape characters
         $namespacePartCorrected = $this->correctEscapeChars($namespacePart);
 
+        //check if there was something corrected, if not replace empty string with actual correct string
         $namespace = (!empty($namespacePartCorrected) ? $namespacePartCorrected : $namespacePart );
 
         $namespace = str_replace("/", '\/', $namespace);
