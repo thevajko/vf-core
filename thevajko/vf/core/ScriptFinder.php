@@ -4,8 +4,6 @@ namespace thevajko\vf\core;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use RecursiveRegexIterator;
-use RegexIterator;
 use thevajko\vf\core\interfaces\IContainerItem;
 
 /**
@@ -52,6 +50,8 @@ class ScriptFinder implements IContainerItem
         return $foundScripts;
     }
 
+
+
     /**
      * Search in directory recursively for php files
      *
@@ -59,13 +59,17 @@ class ScriptFinder implements IContainerItem
      * @param string $mapFilter filter used for pick up files to map
      */
     private function mapScripts($scriptDir, $mapFilter = '/^.+\.php$/i'){
-        $directory = new RecursiveDirectoryIterator($scriptDir);
-        $iterator = new RecursiveIteratorIterator($directory);
-        $regex = new RegexIterator($iterator, $mapFilter, RecursiveRegexIterator::GET_MATCH);
 
-        foreach ($regex as $scriptPath){
-            $this->scriptArray[] = $scriptPath[0];
+        $directory = new RecursiveDirectoryIterator($scriptDir);
+        $iterator = new RecursiveIteratorIterator(new RecursiveReadeableFilterIterator($directory));
+
+
+        foreach ($iterator as $fileinfo){
+            /** @var \SplFileInfo $fileinfo*/
+            if (preg_match($mapFilter, $fileinfo->getFilename()))
+                $this->scriptArray[] = $fileinfo->getPathname();
         }
+
     }
 
     /**
@@ -77,5 +81,12 @@ class ScriptFinder implements IContainerItem
     public function containerInitialization(Container $container)
     {
         // do nothing
+    }
+}
+
+ class RecursiveReadeableFilterIterator extends \RecursiveFilterIterator {
+    public function accept()
+    {
+      return $this->current()->isReadable();
     }
 }
