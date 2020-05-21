@@ -63,6 +63,7 @@ class Booter
     public function __construct(array $autoloadDirs = null)
     {
 
+        session_start();
 
         // this is not clean, but this files are needed for script loading
         require_once  __DIR__."/interfaces/IContainerItem.php";
@@ -124,7 +125,7 @@ class Booter
 
         // remove mapped dirs prefix
 
-        $namespace = explode("/../",$fullPathToScript)[1];
+        $namespace = explode(DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR,$fullPathToScript)[1];
 
         // remove filename
         $filename = basename($namespace);
@@ -136,6 +137,7 @@ class Booter
     }
 
     public function getProbableFullPath($namespacePart){
+
         //correct backslashes in namespace to dir ones
         $namespacePart = str_replace("\\", DIRECTORY_SEPARATOR, $namespacePart);
         //correct backslashes in namespace that are no longer escape characters
@@ -145,6 +147,8 @@ class Booter
         $namespace = (!empty($namespacePartCorrected) ? $namespacePartCorrected : $namespacePart );
 
         $namespace = str_replace("/", '\/', $namespace);
+
+
         //first do search in loaded scripts
         $possibleScripts = $this->scriptFinder->findScript("/$namespace/i");
 
@@ -280,6 +284,9 @@ class Booter
         $actualControl->setRender($render);
         //build method name for request
         $actionMethod = $router->getControllerAction()."Action";
+
+        // run custom logic before action
+        $actualControl->beforeAction();
 
         if ( method_exists ($actualControl, $actionMethod)){
             $actualControl->$actionMethod();

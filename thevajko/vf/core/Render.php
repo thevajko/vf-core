@@ -68,12 +68,13 @@ class Render implements IContainerItem, IRender
      *
      * Method pass to selected template file a data. Template file is automatically found.
      *
-     * @param $templateFilename
+     * @param string $templateFilename
      * @param null $data
+     * @param null $others
      * @return string
      * @throws \Exception
      */
-    public function renderTemplate($templateFilename, $data = null){
+    public function renderTemplate($templateFilename, $data = null, $others = null){
         //check if template file exists
         $template = $this->scriptFinder->findScript( "/".$templateFilename."/i"  );
 
@@ -81,7 +82,7 @@ class Render implements IContainerItem, IRender
         if (count($template) < 1) throw new \Exception("Presenter '$templateFilename' not found.", 500);
 
         //run template in separed method
-        return $this->runTemplate(reset($template), $data);
+        return $this->runTemplate(reset($template), $data, $others);
     }
 
     /**
@@ -89,13 +90,17 @@ class Render implements IContainerItem, IRender
      *
      * @param $filename
      * @param null $data
+     * @param null $others
      * @return string
      */
-    private function runTemplate($filename, $data = null){
+    private function runTemplate($filename, $data = null, $others = null){
         $render = $this;
 
         $control = $this->controlName;
         $action = $this->action;
+
+        if ($others != null && is_array($others))
+            extract($others);
 
         //start catching output
         ob_start();

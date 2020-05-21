@@ -56,6 +56,13 @@ abstract class aControlBase
         $this->templateData = $render->getData();
     }
 
+    /***
+     *  Can be overwritten and is ran before action method.
+     */
+    public function beforeAction(){
+
+    }
+
     /**
      * Sets application container for access to application main components
      * @param Container $container
