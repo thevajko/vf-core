@@ -50,7 +50,9 @@ class DefaultRouter implements IRouter, IContainerItem
     public function containerInitialization(Container $container)
     {
         // Split server 'REQUEST_URI' on "?" char. So on next steps we will work only with parameters from URL not from GET
-        $cleanAndHttpParams = explode("?",$_SERVER['REQUEST_URI']);
+        $requestUri = ( $_SERVER['REQUEST_URI'][0] == '/' ? ltrim($_SERVER['REQUEST_URI'],'/') : $_SERVER['REQUEST_URI']);
+
+        $cleanAndHttpParams = explode("?", $requestUri);
 
         // split server 'SCRIPT_NAME' into field
         $scriptPathFragments = explode("/",str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']));
